@@ -28,6 +28,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 // Route::get('/testing', function() {
 //     return view('app');
 // })->name('login');
+// Route::get('/custom/verify/{id}/{hash}', [VerificationController::class, 'verify']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/register', [RegisterController::class, 'register']); // Use the RegisterController for registratio
 // Logout
@@ -50,5 +51,5 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('login');
 
-// Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-// Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');

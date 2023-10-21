@@ -2,43 +2,52 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class VerificationController extends Controller
 {
-
-        public function verify(EmailVerificationRequest $request)
-        {
-            dd($request->headers->all());
-            // dd($request->user());
-        }
-
     /**
-     * Resend the email verification notification.
+     * Display the email verification notice.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return \Illuminate\View\View
      */
-    public function resend(Request $request)
+    public function show(Request $request)
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect($this->redirectPath());
-        }
-
-        $request->user()->sendEmailVerificationNotification();
-
-        return back()->with('resent', true);
+        return view('auth.verify-email');
     }
 
     /**
-     * Get the post-verification redirect path.
+     * Handle the email verification.
      *
-     * @return string
+     * @param  EmailVerificationRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    protected function redirectPath()
+    public function verify($id, $hash)
     {
-        return route('home'); // You can customize this to redirect to a specific page after verification
+        $user = User::find($id);
+    
+        if (!$user) {
+            abort(404); // Handle this case as needed
+        }
+    
+        if ($user->hasVerifiedEmail()) {
+            $status = 'already_verified';
+        } elseif (hash_equals($hash, sha1($user->getEmailForVerification()))) {
+            $user->markEmailAsVerified();
+            event(new Verified($user));
+            $status = 'verified';
+        } else {
+            $status = 'invalid_link';
+        }
+    
+        $appUrl = config('app.url'); // Retrieve the APP_URL from the config
+    
+        return view('auth.email-verification', compact('status', 'appUrl'));
     }
+    
 }

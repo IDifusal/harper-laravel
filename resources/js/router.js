@@ -25,11 +25,11 @@ const routes = [
     component: Login,
     name: 'login',
   },
-  {
-    path: '/email/verify/:id/:hash', // Define a route for email verification
-    component: EmailVerification,
-    name: 'email-verification',
-  },
+  // {
+  //   path: '/api/email/verify/:id/:hash', // Define a route for email verification
+  //   component: EmailVerification,
+  //   name: 'email-verification',
+  // },
 ];
 
 const router = createRouter({

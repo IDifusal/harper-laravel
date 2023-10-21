@@ -32,7 +32,7 @@
                 >
                 <v-alert
                     v-if="success"
-                    text="Success! Check your email to verify your email address."
+                    :text="formResponse"
                     type="success"
                     variant="tonal"
                 ></v-alert>
@@ -86,7 +86,8 @@ export default {
             formError: null, // Error message for the entire form
             success: false, // Success status
             emailVerificationRequired: false,
-            errorMessage: null
+            errorMessage: null,
+            formResponse: null,
         };
     },
     components: {
@@ -111,20 +112,21 @@ export default {
                     email: this.email,
                     password: this.password,
                 });
+                this.formError = response.data.message;
                 if (response.data.email_verification_required) {
                     this.emailVerificationRequired = true;
-                    this.formError =
-                        "Email verification is required. Please check your email for a verification link.";
-                } else if (response.data.email_verification_required) {
+                } else if (response.data.access_token) {
                     this.emailVerificationRequired = false;
                     if (this.formType === "login") {
+                        localStorage.setItem(
+                            "authToken",
+                            response.data.access_token
+                        );
                         this.success = true;
                         setTimeout(() => {
                             this.$router.push({ name: "home" });
-                        }, 2000);
+                        }, 500);
                     }
-                }else {
-                    this.formError = response.data.message;
                 }
             } catch (error) {
                 if (error.response) {
