@@ -1,6 +1,9 @@
 <template>
     <div>
-HOME VUE
+        <v-btn>
+  Button
+</v-btn>
+
     </div>
 </template>
 

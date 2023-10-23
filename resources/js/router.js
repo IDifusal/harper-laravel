@@ -5,8 +5,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from './views/Home.vue';
 import About from './views/About.vue';
 import Login from './views/Login.vue';
-import EmailVerification from './views/EmailVerification.vue'; // Create this component for email verification
-
 const routes = [
   {
     path: '/',
@@ -25,11 +23,21 @@ const routes = [
     component: Login,
     name: 'login',
   },
-  // {
-  //   path: '/api/email/verify/:id/:hash', // Define a route for email verification
-  //   component: EmailVerification,
-  //   name: 'email-verification',
-  // },
+  {
+    path: '/products',
+    component: () => import('./views/products/ListProducts.vue'),
+    name: 'products',
+  }, 
+  {
+    path: '/products/request',
+    component: () => import('./views/products/RequestProduct.vue'),
+    name: 'request',
+  }, 
+  {
+    path: '/products/movements',
+    component: () => import('./views/products/Movements.vue'),
+    name: 'movements',
+  }
 ];
 
 const router = createRouter({
@@ -37,7 +45,6 @@ const router = createRouter({
   routes,
 });
 
-// Route navigation guards
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem('authToken'); // Check if the token is present in local storage
 

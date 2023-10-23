@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex align-center justify-center" style="height: 100vh">
+    <div class="d-flex align-center justify-center center-div" style="height: 100vh">
         <v-sheet width="400" class="mx-auto">
             <v-form @submit.prevent="submitForm">
                 <div class="w-100 d-flex justify-center">
@@ -42,11 +42,6 @@
                     type="error"
                     variant="tonal"
                 ></v-alert>
-                <v-btn
-                    v-if="emailVerificationRequired"
-                    @click="resendVerificationCode"
-                    >Resend Code</v-btn
-                >
                 <v-btn type="submit" color="harper" block class="mt-2">{{
                     formType === "login" ? "Sign In" : "Sign Up"
                 }}</v-btn>
@@ -74,6 +69,7 @@
 
 <script>
 import PasswordRecoveryDialog from "./components/PasswordRecoveryDialog.vue";
+import { useUserStore } from '../stores/user.store.js';
 import axios from "axios"; // Import axios
 
 export default {
@@ -118,10 +114,15 @@ export default {
                 } else if (response.data.access_token) {
                     this.emailVerificationRequired = false;
                     if (this.formType === "login") {
+                        useUserStore().setRole(response.data.role);
                         localStorage.setItem(
                             "authToken",
                             response.data.access_token
                         );
+                        localStorage.setItem(
+                            "email",
+                            this.email
+                        )
                         this.success = true;
                         setTimeout(() => {
                             this.$router.push({ name: "home" });
@@ -181,3 +182,17 @@ export default {
     },
 };
 </script>
+<style scoped>
+.v-toolbar__content {
+    display: none;
+}
+.v-navigation-drawer {
+    display: none !important;
+}  
+.center-div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+} 
+</style>

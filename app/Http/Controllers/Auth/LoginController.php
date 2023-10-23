@@ -28,7 +28,7 @@ class LoginController extends Controller
                 // User is authenticated and email is verified
                 $token = $user->createToken('auth_token')->plainTextToken;
     
-                return response()->json(['message'=>"Redirecting...",'access_token' => $token]);
+                return response()->json(['message'=>"Redirecting...",'access_token' => $token,"role"=>$user->role]);
             } else {
                 // Email is not verified, set email_verification_required to true
                 return response()->json([
