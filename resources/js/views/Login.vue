@@ -184,7 +184,7 @@ export default {
 </script>
 <style scoped>
 .v-toolbar__content {
-    display: none;
+    display: none !important;
 }
 .v-navigation-drawer {
     display: none !important;

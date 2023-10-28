@@ -15,10 +15,12 @@ return new class extends Migration
     {
         Schema::create('request_records', function (Blueprint $table) {
             $table->id();
-            $table->string('product_name');
             $table->integer('quantity_requested');
             $table->string('requester_email');
             $table->string('delivery_method');
+            $table->boolean('approved')->default(false);
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');            
             $table->timestamps();
         });
     }

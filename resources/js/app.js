@@ -4,6 +4,7 @@ import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import Notifications from '@kyvg/vue3-notification'
 import router from './router'; 
 import { createPinia } from 'pinia';
 const pinia = createPinia()
@@ -38,4 +39,5 @@ const app = createApp(App);
 app.use(router); // Use Vue Router
 app.use(vuetify); // Use Vuetify
 app.use(pinia);
+app.use(Notifications,{position:"bottom right"})
 app.mount('#app');

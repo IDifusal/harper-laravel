@@ -5,6 +5,13 @@
         item-value="name"
         class="elevation-1"
     >
+        <template v-slot:top>
+            <v-toolbar>
+                <v-btn href="/products/request" class="btn-request"
+                    >Request Product</v-btn
+                >
+            </v-toolbar>
+        </template>
         <template v-slot:item="props">
             <tr>
                 <td>{{ props.item.id }}</td>
@@ -18,6 +25,15 @@
                     }}
                 </td>
                 <td>{{ props.item.created_at }}</td>
+                <td>
+                    <v-btn
+                        color="harper"
+                        text
+                        @click="approveRequest(props.item.id)"
+                    >
+                        Approve
+                    </v-btn>
+                </td>
             </tr>
         </template>
     </v-data-table>
@@ -40,11 +56,10 @@ let products = ref([]);
 
 const fetchProducts = () => {
     axios
-        .get("/api/requests/all-requests")
+        .get("/api/requests/pending-requests")
         .then((response) => {
-            products.value = response.data;
+            products.value = response.data.requests;
         })
-        
         .catch((error) => {
             console.error("Error fetching products:", error);
         });

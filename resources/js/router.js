@@ -8,15 +8,15 @@ import Login from './views/Login.vue';
 const routes = [
   {
     path: '/',
-    component: Home,
+    component: () => import('./views/products/AllProducts.vue'),
     name: 'home',
-    meta: { requiresAuth: true }, // Add this meta field to require authentication
+    meta: { requiresAuth: true }, 
   },
   {
     path: '/about',
     component: About,
     name: 'about',
-    meta: { requiresAuth: true }, // Add this meta field to require authentication
+    meta: { requiresAuth: true },
   },
   {
     path: '/login',
@@ -25,18 +25,39 @@ const routes = [
   },
   {
     path: '/products',
-    component: () => import('./views/products/ListProducts.vue'),
+    component: () => import('./views/products/AllProducts.vue'),
     name: 'products',
+    meta: { requiresAuth: true },     
   }, 
+  {
+    path: '/products/:id',
+    component: () => import('./views/products/DetailsProduct.vue'),
+    name: 'details',
+    meta: { requiresAuth: true },     
+  },
   {
     path: '/products/request',
     component: () => import('./views/products/RequestProduct.vue'),
     name: 'request',
+    meta: { requiresAuth: true },     
   }, 
   {
     path: '/products/movements',
     component: () => import('./views/products/Movements.vue'),
     name: 'movements',
+    meta: { requiresAuth: true },     
+  },
+  {
+    path:'/requests/my-requests',
+    component: () => import('./views/products/MyRequests.vue'),
+    name: 'my-requests',
+    meta: { requiresAuth: true },
+  },
+  {
+    path:'/requests/pending-requests',
+    component: () => import('./views/products/PendingRequests.vue'),
+    name: 'pending-requests',
+    meta: { requiresAuth: true },
   }
 ];
 

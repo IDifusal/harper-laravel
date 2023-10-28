@@ -7,6 +7,7 @@ use App\Mail\RequestProduct;
 use Illuminate\Http\Request;
 use App\Models\CustomAddress;
 use App\Models\RequestRecord;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 
 class ProductController extends Controller
@@ -70,12 +71,40 @@ class ProductController extends Controller
     
         return response()->json(['products' => $products]);
     }
+    public function getMyRequests(Request $request)
+    {
+        $requests = RequestRecord::select('request_records.*', 'delivery_methods.name as delivery_method_name')
+            ->where('requester_email', $request->email)
+            ->join('delivery_methods', 'request_records.delivery_method', '=', 'delivery_methods.id')
+            ->get();
+    
+        return response()->json(['requests' => $requests]);
+    }
+    
+    public function getPendingRequests()
+    {
+        $requests = RequestRecord::select('request_records.*', 'delivery_methods.name as delivery_method_name')
+            ->where('approved', 0)
+            ->join('delivery_methods', 'request_records.delivery_method', '=', 'delivery_methods.id')
+            ->get();
+    
+        return response()->json(['requests' => $requests]);
+    }
+
+    public function getAllRequests(){
+        $requests = RequestRecord::select('request_records.*', 'delivery_methods.name as delivery_method_name')
+            ->join('delivery_methods', 'request_records.delivery_method', '=', 'delivery_methods.id')
+            ->get();
+    
+        return response()->json($requests);
+    }
+    
 
     public function requestProduct(Request $request){
         $product = Product::findOrFail($request->product_id);
         $requestRecord = new RequestRecord();
         $requestRecord->delivery_method = $request->delivery_method;
-        $requestRecord->product_name = $product->name;
+        $requestRecord->product_id = $product->id;
         $requestRecord->quantity_requested = $request->quantity_requested;
         $requestRecord->requester_email = $request->requester_email;$requestRecord->delivery_method = $request->delivery_method;
         $requestRecord->save();        
@@ -92,10 +121,14 @@ class ProductController extends Controller
         
         $requestRecord->save();
         // $admins = User::where('role', 'admin')->pluck('email')->toArray();
-        $admins = ['difusal115@gmail.com'];
-        // In case you want to send emails one-by-one (individual emails to each admin)
-        foreach ($admins as $admin) {
-            Mail::to($admin)->send(new RequestProduct($request->all()));
+        if (App::environment('development')) {
+            $admins = ['difusal11@gmail.com'];
+        } else {
+            // Production or any other environment
+            $admins = [
+                'difusal115@gmail.com',
+                // ... add more admin emails as needed
+            ];
         }
     
         return response()->json(['message' => 'Request sent successfully']);

@@ -5,6 +5,13 @@
         item-value="name"
         class="elevation-1"
     >
+        <template v-slot:top>
+            <v-toolbar>
+                <v-btn href="/products/request" class="btn-request"
+                    >Request Product</v-btn
+                >
+            </v-toolbar>
+        </template>
         <template v-slot:item="props">
             <tr>
                 <td>{{ props.item.id }}</td>
@@ -39,17 +46,25 @@ let headers = ref([
 let products = ref([]);
 
 const fetchProducts = () => {
+    const userEmail = localStorage.getItem("email");
     axios
-        .get("/api/requests/all-requests")
-        .then((response) => {
-            products.value = response.data;
+        .get("/api/requests/my-requests", {
+            params: {
+                email: userEmail,
+            },
         })
-        
+        .then((response) => {
+            products.value = response.data.requests;
+        })
         .catch((error) => {
             console.error("Error fetching products:", error);
         });
 };
 
+const getStatus = (item) => {
+    console.log(item);
+    return "success";
+};
 onMounted(() => {
     fetchProducts();
 });

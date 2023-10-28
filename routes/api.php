@@ -56,6 +56,9 @@ Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'
 Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
 //Products 
-Route::get('products', [ProductController::class,'index']);
+Route::get('/products', [ProductController::class,'index']);
 Route::get('/products-with-delivery-methods', [ProductController::class, 'getProductsAndDeliveryMethods']);
 Route::post('/request-product', [ProductController::class, 'requestProduct']);
+Route::get('/requests/my-requests', [ProductController::class, 'getMyRequests']);
+Route::get('/requests/all-requests', [ProductController::class, 'getAllRequests']);
+Route::get('/requests/pending-requests', [ProductController::class, 'getPendingRequests']);

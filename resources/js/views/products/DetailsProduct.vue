@@ -9,6 +9,7 @@
                     item-text="title"
                     item-value="id"
                     v-model="selectedProduct"
+                    return-object
                 ></v-select>
             </div>
             <div class="form-group">
@@ -62,21 +63,19 @@
                 >Send Request</v-btn
             >
         </form>
-        <v-snackbar
-      v-model="snackbar"
-    >
-      Request created successfully... Redirecting to My Requests
-    </v-snackbar>
+        <v-snackbar v-model="snackbar">
+            Request created successfully... Redirecting to My Requests
+        </v-snackbar>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { notify } from "@kyvg/vue3-notification";
+import { ref, onMounted, watch, computed } from "vue";
+import { useRoute } from "vue-router";
 import axios from "axios";
+const route = useRoute();
 const products = ref([]);
 const selectedProduct = ref(null);
-const listDeliveryMethods = ref([]);
 const selectedDeliveryMethod = ref(null);
 const errorForm = ref(false);
 const errorFormMessage = ref("");
@@ -85,9 +84,20 @@ const deliveryCustom = ref({
     state: null,
     zip_code: null,
 });
+
+const listDeliveryMethods = computed(() => {
+    if (selectedProduct.value && selectedProduct.value.delivery_methods) {
+        return selectedProduct.value.delivery_methods.map(method => ({
+            id: method.id,
+            title: method.title
+        }));
+    }
+    return [];
+});
+
 const snackbar = ref(false);
 const quantity = ref(1);
-const itemId = $route.params.id
+const itemId = route.params.id;
 const rules = {
     required: (value) => !!value || "Required.",
 };
@@ -115,11 +125,7 @@ const fetchProductsAndDeliveryMethods = async () => {
         const response = await axios.get("/api/products-with-delivery-methods");
         products.value = response.data.products;
         if (products.value.length > 0) {
-            // Set the default selected product as the current id 
-            selectedProduct.value = products.value.find(p => p.id === itemId);
-            // selectedProduct.value = products.value[0].id;
-            // selectedDeliveryMethod.value =
-            // products.value[0].delivery_methods[0].title;
+            selectedProduct.value = products.value.find((p) => p.id == itemId);
         }
     } catch (error) {
         console.error("Error fetching products and delivery methods:", error);
@@ -129,7 +135,7 @@ const fetchProductsAndDeliveryMethods = async () => {
 const submitRequest = async () => {
     try {
         const requestData = {
-            product_id: selectedProduct.value,
+            product_id: selectedProduct.value.id,
             delivery_method: selectedDeliveryMethod.value,
             quantity_requested: quantity.value,
             requester_email: userEmail(),
@@ -153,21 +159,11 @@ const submitRequest = async () => {
         console.error("Error submitting product request:", error);
     }
 };
-watch(selectedProduct, (newSelectedProduct) => {
-    if (newSelectedProduct) {
-        listDeliveryMethods.value = [];
-        let productTemp = products.value.find(
-            (p) => p.id === newSelectedProduct
-        );
-        if (productTemp) {
-            listDeliveryMethods.value = productTemp.delivery_methods;
-            if (listDeliveryMethods.value.length > 0) {
-                selectedDeliveryMethod.value = listDeliveryMethods.value[0].id;
-            }
-            return listDeliveryMethods.value;
-        } else {
-            listDeliveryMethods.value = [];
-        }
+watch(listDeliveryMethods, (newList) => {
+    if (newList && newList.length > 0) {
+        selectedDeliveryMethod.value = newList[0].id;
+    } else {
+        selectedDeliveryMethod.value = null;
     }
 });
 

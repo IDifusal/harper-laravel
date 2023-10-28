@@ -22,7 +22,6 @@ class RequestProduct extends Mailable
         $deliveryMethod = DeliveryMethod::find($data['delivery_method']);
         $deliveryMethodName = $deliveryMethod ? $deliveryMethod->name : 'Unknown Delivery Method';
 
-        // Add product name and delivery method name to the $data array
         $data['product_name'] = $productName;
         $data['delivery_method_name'] = $deliveryMethodName;
 
