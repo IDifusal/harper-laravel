@@ -72,7 +72,6 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { notify } from "@kyvg/vue3-notification";
 import axios from "axios";
 const products = ref([]);
 const selectedProduct = ref(null);
@@ -95,7 +94,7 @@ const userEmail = () => {
     return localStorage.getItem("email");
 };
 const validateAdditionalFields = () => {
-    if (selectedDeliveryMethod.value === 3) {
+    if (selectedDeliveryMethod.value == 3) {
         if (
             deliveryCustom.value.address &&
             deliveryCustom.value.state &&
@@ -127,14 +126,21 @@ const fetchProductsAndDeliveryMethods = async () => {
 };
 
 const submitRequest = async () => {
+    alert("submit");
     try {
         const requestData = {
             product_id: selectedProduct.value,
             delivery_method: selectedDeliveryMethod.value,
             quantity_requested: quantity.value,
             requester_email: userEmail(),
+
         };
+        console.log(selectedDeliveryMethod.value);
         if (selectedDeliveryMethod.value === 3) {
+            requestData["address"] = deliveryCustom.value.address;
+            requestData['state'] = deliveryCustom.value.state;
+            requestData['zip_code'] = deliveryCustom.value.zip_code;
+
             if (validateAdditionalFields()) {
             } else {
                 errorForm.value = true;

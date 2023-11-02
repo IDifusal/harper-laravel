@@ -141,6 +141,10 @@ const submitRequest = async () => {
             requester_email: userEmail(),
         };
         if (selectedDeliveryMethod.value === 3) {
+            requestData["custom_address_address"] = deliveryCustom.value.address;
+            requestData['custom_address_state'] = deliveryCustom.value.state;
+            requestData['custom_address_zip_code'] = deliveryCustom.value.zip_code;
+
             if (validateAdditionalFields()) {
             } else {
                 errorForm.value = true;

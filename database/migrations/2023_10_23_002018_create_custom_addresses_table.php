@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('request_id'); // Add the request_id column
             $table->string('address');
+            $table->string('state');
+            $table->string('zip_code');
             $table->timestamps();
     
             $table->foreign('request_id')->references('id')->on('request_records');

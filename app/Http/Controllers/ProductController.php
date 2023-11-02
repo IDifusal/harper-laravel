@@ -113,7 +113,9 @@ class ProductController extends Controller
         if ($request->delivery_method === 3) {
             $customAddress = new CustomAddress();
             $customAddress->request_id = $requestRecord->id; 
-            $customAddress->address = $request->custom_address;
+            $customAddress->address = $request->custom_address_address;
+            $customAddress->state = $request->custom_address_state;
+            $customAddress->zip_code = $request->custom_address_zip_code;
             $customAddress->save();
         } 
         // LOOGIC EMAIL
