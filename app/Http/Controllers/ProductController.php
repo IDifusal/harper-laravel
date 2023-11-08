@@ -142,7 +142,7 @@ class ProductController extends Controller
     {
         $requestRecord = RequestRecord::with('product')->findOrFail($id);
         $requestRecord->approved = 1;
-        $requestRecord->save();
+        $requestRecord->save(); 
     
         // Assuming 'name' is a column in your products table
         $productName = $requestRecord->product->name;
