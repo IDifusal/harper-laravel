@@ -37,7 +37,7 @@ const routes = [
   },
   {
     path: '/products/request',
-    component: () => import('./views/products/RequestProduct.vue'),
+    component: () => import('./views/products/AllProducts.vue'),
     name: 'request',
     meta: { requiresAuth: true },     
   }, 

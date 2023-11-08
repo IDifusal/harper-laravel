@@ -120,6 +120,10 @@ export default {
                             response.data.access_token
                         );
                         localStorage.setItem(
+                            "role",
+                            response.data.role
+                        )
+                        localStorage.setItem(
                             "email",
                             this.email
                         )

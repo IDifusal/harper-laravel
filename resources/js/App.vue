@@ -1,6 +1,11 @@
 <template>
     <v-app>
-        <v-navigation-drawer class="" color="harper" v-model="drawer" app v-if="isUserLoggedIn">
+        <v-navigation-drawer
+            color="harper"
+            v-model="drawer"
+            app
+            v-if="isUserLoggedIn"
+        >
             <v-btn
                 elevation="0"
                 color="harper"
@@ -14,7 +19,7 @@
 
             <v-list dense nav>
                 <v-list-item
-                    v-for="item in itemsMenu"
+                    v-for="item in filteredItemsMenu"
                     :key="item.name"
                     :value="item.link"
                     :href="item.link"
@@ -41,7 +46,7 @@
                 v-if="!drawer"
                 @click="toggleSidebar"
             ></v-app-bar-nav-icon>
-            <v-app-bar-title>Harper Marketing inventory</v-app-bar-title>
+            <v-app-bar-title>Harper Marketing Inventory</v-app-bar-title>
         </v-app-bar>
 
         <v-main>
@@ -53,10 +58,11 @@
 </template>
 
 <script setup>
-import "@mdi/font/css/materialdesignicons.css";
-import { onMounted, ref } from "vue";
-const isUserLoggedIn = ref(false); 
+import { onMounted, ref, computed } from "vue";
 
+const isUserLoggedIn = ref(false);
+const drawer = ref(true);
+const userRole = computed(() => localStorage.getItem("role"));
 const itemsMenu = [
     {
         name: "Home",
@@ -77,10 +83,9 @@ const itemsMenu = [
                 link: "/requests/my-requests",
             },
             {
-              name:"Pending Requests",
-              link:"/requests/pending-requests"
+                name: "Pending Requests",
+                link: "/requests/pending-requests",
             },
-          
             {
                 name: "All Requests",
                 link: "/products/movements",
@@ -89,7 +94,22 @@ const itemsMenu = [
     },
 ];
 
-const drawer = ref(true);
+const filteredItemsMenu = computed(() => {
+    if (userRole.value === "user") {
+        return itemsMenu.map((item) => {
+            if (item.name === "Products") {
+                const filteredChilds = item.childs.filter(
+                    (child) =>
+                        child.name !== "Pending Requests" &&
+                        child.name !== "All Requests"
+                );
+                return { ...item, childs: filteredChilds };
+            }
+            return item;
+        });
+    }
+    return itemsMenu;
+});
 
 const toggleSidebar = () => {
     drawer.value = !drawer.value;
@@ -97,7 +117,7 @@ const toggleSidebar = () => {
 
 const toggleSubItems = (item) => {
     if (item.childs) {
-        item.opened = !item.opened; // Add an 'opened' property to track the open state
+        item.opened = !item.opened;
     }
 };
 

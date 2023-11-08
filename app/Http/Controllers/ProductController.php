@@ -7,6 +7,8 @@ use App\Mail\RequestProduct;
 use Illuminate\Http\Request;
 use App\Models\CustomAddress;
 use App\Models\RequestRecord;
+use App\Models\DeliveryMethod; 
+use App\Mail\RequestApprovedMail;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 
@@ -135,4 +137,29 @@ class ProductController extends Controller
     
         return response()->json(['message' => 'Request sent successfully']);
     }
+
+    public function approveRequest($id)
+    {
+        $requestRecord = RequestRecord::with('product')->findOrFail($id);
+        $requestRecord->approved = 1;
+        $requestRecord->save();
+    
+        // Assuming 'name' is a column in your products table
+        $productName = $requestRecord->product->name;
+    
+        // If 'delivery_method' is a string and not a foreign key
+        $deliveryMethodName = $requestRecord->delivery_method;
+        $deliveryMethod = DeliveryMethod::find($deliveryMethodName);
+        $foundDeliveryName = $deliveryMethod ? $deliveryMethod->name : 'Unknown Delivery Method';
+
+        $emailData = [
+            'product_name' => $productName,
+            'delivery_method_name' => $foundDeliveryName,
+            'quantity_requested' => $requestRecord->quantity_requested,
+        ];
+        Mail::to($requestRecord->requester_email)->send(new RequestApprovedMail($emailData));
+    
+        return response()->json(['message' => 'Request approved successfully']);
+    }
+    
 }

@@ -20,8 +20,8 @@
                 <td>
                     {{
                         props.item.approved == 1
-                            ? "Acepted"
-                            : "Pending Aprovation"
+                            ? "Accepted"
+                            : "Pending Approval"
                     }}
                 </td>
                 <td>{{ props.item.created_at }}</td>
@@ -29,7 +29,7 @@
                     <v-btn
                         color="harper"
                         text
-                        @click="approveRequest(props.item.id)"
+                        @click="showConfirmDialog(props.item.id)"
                     >
                         Approve
                     </v-btn>
@@ -37,13 +37,41 @@
             </tr>
         </template>
     </v-data-table>
-</template>
+    <v-dialog
+        v-model="dialog"
+        persistent
+        max-width="290"
+    >
+        <v-card>
+            <v-card-title class="headline">Confirmation</v-card-title>
+            <v-card-text>Are you sure you want to approve this request?</v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="dialog = false"
+                >
+                    Cancel
+                </v-btn>
+                <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="approveRequest(currentRequestId)"
+                >
+                    Confirm
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+  </template>
 
 <script setup>
 import axios from "axios";
 import { VDataTable } from "vuetify/labs/VDataTable";
 import { ref, onMounted } from "vue";
-
+let dialog = ref(false);
+let currentRequestId = ref(null);
 let headers = ref([
     { title: "ID", key: "id" },
     { title: "Quantity Requested", key: "quantity_requested" },
@@ -68,6 +96,21 @@ const fetchProducts = () => {
 onMounted(() => {
     fetchProducts();
 });
+const showConfirmDialog = (id) => {
+    currentRequestId.value = id;
+    dialog.value = true;
+};
+const approveRequest = (id) => {
+    dialog.value = false;
+    axios
+        .post(`/api/products/approve/${id}`)
+        .then((response) => {
+            fetchProducts();
+        })
+        .catch((error) => {
+            console.error("Error fetching products:", error);
+        });
+};
 </script>
 
 <style scoped>
