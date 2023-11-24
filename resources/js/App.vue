@@ -49,7 +49,7 @@
             <v-app-bar-title>Harper Marketing Inventory</v-app-bar-title>
         </v-app-bar>
 
-        <v-main>
+        <v-main class="pa-5 md:pa-0">
             <v-container fluid>
                 <router-view></router-view>
             </v-container>
@@ -59,10 +59,12 @@
 
 <script setup>
 import { onMounted, ref, computed } from "vue";
-
-const isUserLoggedIn = ref(false);
+import { useUserStore } from "./stores/user.store"; 
+const userStore = useUserStore();
+const isUserLoggedIn = computed(() => userStore.isUserLoggedIn);
+const userRole = computed(() => userStore.userRole);
 const drawer = ref(true);
-const userRole = computed(() => localStorage.getItem("role"));
+
 const itemsMenu = [
     {
         name: "Home",
@@ -122,7 +124,8 @@ const toggleSubItems = (item) => {
 };
 
 onMounted(() => {
-    isUserLoggedIn.value = localStorage.getItem("authToken") ? true : false;
+    userStore.setIslogged(true)
+    localStorage.getItem("authToken") ? userStore.setIslogged(true) : userStore.setIslogged(false);
 });
 </script>
 

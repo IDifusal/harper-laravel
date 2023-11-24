@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex align-center justify-center center-div" style="height: 100vh">
         <v-sheet width="400" class="mx-auto">
-            <v-form @submit.prevent="submitForm">
+            <v-form @submit.prevent="submitForm" class="pa-5 md:pa-0">
                 <div class="w-100 d-flex justify-center">
                     <img
                         src="https://spanclick.com/wp-content/uploads/2023/08/companie-1.png"
@@ -114,6 +114,7 @@ export default {
                 } else if (response.data.access_token) {
                     this.emailVerificationRequired = false;
                     if (this.formType === "login") {
+                        useUserStore().setIslogged(true);
                         useUserStore().setRole(response.data.role);
                         localStorage.setItem(
                             "authToken",
