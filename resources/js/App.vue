@@ -49,8 +49,8 @@
             <v-app-bar-title>Harper Marketing Inventory</v-app-bar-title>
         </v-app-bar>
 
-        <v-main class="pa-5 md:pa-0">
-            <v-container fluid>
+        <v-main>
+            <v-container fluid class="pt-15 pt-md-0">
                 <router-view></router-view>
             </v-container>
         </v-main>
