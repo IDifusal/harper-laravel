@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex align-center justify-center center-div" style="height: 100vh">
         <v-sheet width="400" class="mx-auto">
-            <v-form @submit.prevent="submitForm" class="pa-5 md:pa-0">
+            <v-form @submit.prevent="submitForm" class="pa-5 pa-md-0">
                 <div class="w-100 d-flex justify-center">
                     <img
                         src="https://spanclick.com/wp-content/uploads/2023/08/companie-1.png"
@@ -48,7 +48,7 @@
             </v-form>
 
             <div class="mt-2">
-                <p class="text-body-2">
+                <p class="text-body-2 mr-5 mr-mr-0">
                     {{
                         formType === "login"
                             ? "Don't have an account? "
