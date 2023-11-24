@@ -48,7 +48,7 @@
             </v-form>
 
             <div class="mt-2">
-                <p class="text-body-2 mr-5 mr-mr-0">
+                <p class="text-body-2 mf-5 mf-md-0">
                     {{
                         formType === "login"
                             ? "Don't have an account? "
