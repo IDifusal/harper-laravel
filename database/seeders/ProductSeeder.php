@@ -66,8 +66,8 @@ class ProductSeeder extends Seeder
             ['name' => 'Name Tag Holder - Red', 'initial_stock' => 196, 'img' => 'Name-Tag-Holder-Red.png'],
             ['name' => 'Plastic Trade Show Bags', 'initial_stock' => 0, 'img' => 'Plastic-Trade-Show-Bags.png'],
             ['name' => 'Roller Bags', 'initial_stock' => 7, 'img' => 'Roller-Bags.png'],
-            ['name' => 'Harper Table Clothes (Small)', 'initial_stock' => 2, 'img' => 'Harper-Table-Clothes-(Small).png'],
-            ['name' => 'Harper Table Clothes (Large)', 'initial_stock' => 2, 'img' => 'Harper-Table-Clothes-(Large).png'],
+            ['name' => 'Harper Table Clothes (Small)', 'initial_stock' => 2, 'img' => 'default.png'],
+            ['name' => 'Harper Table Clothes (Large)', 'initial_stock' => 2, 'img' => 'default.png'],
             ['name' => 'Pop-Up Harper Banner', 'initial_stock' => 1, 'img' => 'Pop-Up-Harper-Banner.png'],
             ['name' => 'Hanging Harper Banner', 'initial_stock' => 1, 'img' => 'Hanging-Harper-Banner.png'],            
         ];
